@@ -267,7 +267,31 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
   cursor: pointer;
 }
 .balance-row:active { background: #f8fafc; border-radius: 6px; }
-.expand-icon { font-size: 11px; color: var(--sub); margin-left: 4px; }
+.balance-right { display: flex; align-items: center; gap: 6px; }
+.expand-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #eef2ff;
+  transition: transform .2s ease, background .2s ease;
+}
+.expand-icon::after {
+  content: "";
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid var(--primary);
+  border-bottom: 2px solid var(--primary);
+  transform: rotate(45deg);
+  margin-top: -2px;
+}
+.expand-icon.open {
+  background: #dbeafe;
+  transform: rotate(180deg);
+}
 
 .balance-detail {
   padding: 4px 8px 12px;

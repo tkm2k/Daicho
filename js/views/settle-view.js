@@ -23,7 +23,7 @@ export function setup(appRef) {
     if (!detail || !detail.classList.contains("balance-detail")) return;
     const isOpen = !detail.classList.contains("hidden");
     detail.classList.toggle("hidden", isOpen);
-    row.querySelector(".expand-icon").textContent = isOpen ? "▽" : "△";
+    row.querySelector(".expand-icon").classList.toggle("open", !isOpen);
   });
 
   $("btn-copy-settle").onclick = () => {
@@ -95,9 +95,12 @@ export function render() {
     .map(
       (b) => `
     <div class="balance-row" data-mid="${b.id}">
-      <span>${esc(b.name)} <span class="expand-icon">▽</span></span>
-      <span class="${b.bal > 0 ? "plus" : b.bal < 0 ? "minus" : ""}">
-        ${b.bal > 0 ? "+" : ""}${b.bal.toLocaleString()}円 ${b.bal > 0 ? "（受け取る）" : b.bal < 0 ? "（支払う）" : ""}
+      <span>${esc(b.name)}</span>
+      <span class="balance-right">
+        <span class="${b.bal > 0 ? "plus" : b.bal < 0 ? "minus" : ""}">
+          ${b.bal > 0 ? "+" : ""}${b.bal.toLocaleString()}円 ${b.bal > 0 ? "（受け取る）" : b.bal < 0 ? "（支払う）" : ""}
+        </span>
+        <span class="expand-icon"></span>
       </span>
     </div>
     <div class="balance-detail hidden" data-mid="${b.id}">
