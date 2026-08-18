@@ -264,8 +264,18 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
   justify-content: space-between;
   padding: 10px 2px;
   border-bottom: 1px solid var(--border);
+  cursor: pointer;
 }
-.balance-row:last-child { border-bottom: none; }
+.balance-row:active { background: #f8fafc; border-radius: 6px; }
+.expand-icon { font-size: 11px; color: var(--sub); margin-left: 4px; }
+
+.balance-detail {
+  padding: 4px 8px 12px;
+  border-bottom: 1px solid var(--border);
+  background: #f8fafc;
+  border-radius: 0 0 8px 8px;
+  margin-bottom: 2px;
+}
 .plus { color: var(--plus); font-weight: 700; }
 .minus { color: var(--minus); font-weight: 700; }
 

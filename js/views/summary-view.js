@@ -1,59 +1,12 @@
 import { $, esc, yen } from "../utils.js";
 import { state } from "../state.js";
+import { calcMemberSummaries } from "../logic/settlement.js";
 
 let app;
 
 export function setup(appRef) {
   app = appRef;
   $("btn-back-summary").onclick = () => app.switchTab("settle");
-}
-
-function calcMemberSummaries() {
-  const txs = state.transactions;
-  const hasCategory = {
-    tatekae: txs.some((t) => t.category === "tatekae"),
-    loan: txs.some((t) => t.category === "loan"),
-    gamble: txs.some((t) => t.category === "gamble"),
-  };
-
-  const summaries = state.members.map((m) => {
-    let tatekaeExpense = 0;
-    let tatekaePaid = 0;
-    let loanBalance = 0;
-    let gambleBalance = 0;
-
-    txs.forEach((tx) => {
-      tx.lines.forEach((l) => {
-        if (l.member_id !== m.id) return;
-        if (tx.category === "tatekae") {
-          if (l.delta < 0) tatekaeExpense += Math.abs(l.delta);
-          if (l.delta > 0) tatekaePaid += l.delta;
-        } else if (tx.category === "loan") {
-          loanBalance += l.delta;
-        } else if (tx.category === "gamble") {
-          gambleBalance += l.delta;
-        }
-      });
-    });
-
-    const subtotal = -tatekaeExpense + loanBalance + gambleBalance;
-    const totalBalance = subtotal + tatekaePaid;
-
-    return {
-      id: m.id,
-      name: m.name,
-      tatekaeExpense,
-      tatekaePaid,
-      loanBalance,
-      gambleBalance,
-      subtotal,
-      totalBalance,
-    };
-  });
-
-  const groupExpense = summaries.reduce((s, m) => s + m.tatekaeExpense, 0);
-
-  return { summaries, groupExpense, hasCategory };
 }
 
 function balanceHtml(val) {
@@ -70,7 +23,7 @@ function totalLabel(val) {
 }
 
 export function render() {
-  const { summaries, groupExpense, hasCategory } = calcMemberSummaries();
+  const { summaries, groupExpense, hasCategory } = calcMemberSummaries(state.members, state.transactions);
 
   if (state.transactions.length === 0) {
     $("summary-content").innerHTML =

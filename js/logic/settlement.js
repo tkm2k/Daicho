@@ -41,6 +41,53 @@ export function splitTatekae(amount, payerId, targetIds) {
   return lines;
 }
 
+export function calcMemberSummaries(members, transactions) {
+  const hasCategory = {
+    tatekae: transactions.some((t) => t.category === "tatekae"),
+    loan: transactions.some((t) => t.category === "loan"),
+    gamble: transactions.some((t) => t.category === "gamble"),
+  };
+
+  const summaries = members.map((m) => {
+    let tatekaeExpense = 0;
+    let tatekaePaid = 0;
+    let loanBalance = 0;
+    let gambleBalance = 0;
+
+    transactions.forEach((tx) => {
+      tx.lines.forEach((l) => {
+        if (l.member_id !== m.id) return;
+        if (tx.category === "tatekae") {
+          if (l.delta < 0) tatekaeExpense += Math.abs(l.delta);
+          if (l.delta > 0) tatekaePaid += l.delta;
+        } else if (tx.category === "loan") {
+          loanBalance += l.delta;
+        } else if (tx.category === "gamble") {
+          gambleBalance += l.delta;
+        }
+      });
+    });
+
+    const subtotal = -tatekaeExpense + loanBalance + gambleBalance;
+    const totalBalance = subtotal + tatekaePaid;
+
+    return {
+      id: m.id,
+      name: m.name,
+      tatekaeExpense,
+      tatekaePaid,
+      loanBalance,
+      gambleBalance,
+      subtotal,
+      totalBalance,
+    };
+  });
+
+  const groupExpense = summaries.reduce((s, m) => s + m.tatekaeExpense, 0);
+
+  return { summaries, groupExpense, hasCategory };
+}
+
 export function calcBalances(members, transactions, filter = "all") {
   const bal = {};
   members.forEach((m) => (bal[m.id] = 0));
