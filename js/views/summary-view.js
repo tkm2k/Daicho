@@ -36,7 +36,8 @@ function calcMemberSummaries() {
       });
     });
 
-    const totalBalance = tatekaePaid - tatekaeExpense + loanBalance + gambleBalance;
+    const subtotal = -tatekaeExpense + loanBalance + gambleBalance;
+    const totalBalance = subtotal + tatekaePaid;
 
     return {
       id: m.id,
@@ -45,6 +46,7 @@ function calcMemberSummaries() {
       tatekaePaid,
       loanBalance,
       gambleBalance,
+      subtotal,
       totalBalance,
     };
   });
@@ -84,7 +86,7 @@ export function render() {
         rows += `
         <div class="summary-row">
           <span>📘 自分の支出</span>
-          <span>${yen(m.tatekaeExpense)}</span>
+          ${balanceHtml(-m.tatekaeExpense)}
         </div>`;
       }
 
@@ -110,17 +112,22 @@ export function render() {
         ${rows}
         <div class="summary-divider"></div>
         <div class="summary-row total">
+          <span>小計（実質負担額）</span>
+          ${balanceHtml(m.subtotal)}
+        </div>
+        ${m.tatekaePaid > 0 ? `
+        <div class="summary-row">
+          <span>📘 立替支払額</span>
+          ${balanceHtml(m.tatekaePaid)}
+        </div>` : ""}
+        <div class="summary-divider"></div>
+        <div class="summary-row total">
           <span>💰 最終収支</span>
           <span>
             ${balanceHtml(m.totalBalance)}
             <span class="summary-total-label">${totalLabel(m.totalBalance)}</span>
           </span>
         </div>
-        ${hasCategory.tatekae && m.tatekaePaid > 0 ? `
-        <div class="summary-row sub">
-          <span>↳ 立替払い額</span>
-          <span>${yen(m.tatekaePaid)}</span>
-        </div>` : ""}
       </div>`;
     })
     .join("");
