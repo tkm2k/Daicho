@@ -54,7 +54,7 @@ export function setup(appRef) {
 }
 
 async function handleEditMember(id) {
-  const m = state.members.find((m) => m.id === id);
+  const m = state.members.find((m) => String(m.id) === String(id));
   if (!m) return;
   const name = await showRenameModal(m.name);
   if (name === null) return;
@@ -63,7 +63,7 @@ async function handleEditMember(id) {
   if (trimmed === m.name) return;
   if (state.members.some((x) => x.name === trimmed)) return toast("同じ名前のメンバーがいます");
   try {
-    await store.renameMember(state.eventId, id, trimmed);
+    await store.renameMember(state.eventId, m.id, trimmed);
     await app.refresh();
     toast("名前を変更しました");
   } catch (err) {
