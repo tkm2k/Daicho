@@ -35,11 +35,11 @@ export function createSupabaseStore(sb) {
     },
 
     async renameMember(eid, mid, name) {
-      const { error } = await sb.rpc("rename_member", {
-        p_event_id: eid,
-        p_member_id: mid,
-        p_name: name,
-      });
+      const { error } = await sb
+        .from("members")
+        .update({ name })
+        .eq("id", mid)
+        .eq("event_id", eid);
       if (error) throw error;
     },
 
