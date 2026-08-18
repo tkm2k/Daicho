@@ -128,6 +128,7 @@
         <button class="btn-share-settle hidden" id="btn-share-settle">📤 共有する</button>
       </div>
     </div>
+    <button class="btn-summary" id="btn-open-summary">📊 メンバー別 支出・収支の詳細を見る</button>
     <div class="card">
       <h2>📊 各メンバーの収支</h2>
       <div class="chips" id="settle-chips" style="margin-top:6px">
@@ -138,6 +139,15 @@
       </div>
       <div id="balance-list"></div>
     </div>
+  </div>
+
+  <!-- メンバー別サマリータブ -->
+  <div id="tab-summary" class="hidden">
+    <div class="card">
+      <h2>📊 メンバー別 収支サマリー</h2>
+      <div id="summary-content"></div>
+    </div>
+    <button class="btn-back" id="btn-back-summary">戻る</button>
   </div>
 
   <!-- メンバータブ -->

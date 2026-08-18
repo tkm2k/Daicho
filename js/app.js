@@ -12,6 +12,7 @@ import {
   exitEditMode,
 } from "./views/tx-form.js";
 import { setup as setupSettle, render as renderSettle } from "./views/settle-view.js";
+import { setup as setupSummary, render as renderSummary } from "./views/summary-view.js";
 import { setup as setupMembers, render as renderMembers } from "./views/members.js";
 
 const appController = {
@@ -25,6 +26,7 @@ setupHome(appController);
 setupTxList(appController);
 setupTxForm(appController);
 setupSettle(appController);
+setupSummary(appController);
 setupMembers(appController);
 
 document.querySelector(".tabs").addEventListener("click", (e) => {
@@ -33,6 +35,8 @@ document.querySelector(".tabs").addEventListener("click", (e) => {
   if (b.dataset.tab === "add" && state.editingTxId) exitEditMode();
   switchTab(b.dataset.tab);
 });
+
+$("btn-open-summary").onclick = () => switchTab("summary");
 
 $("btn-copy").onclick = async () => {
   try {
@@ -50,13 +54,14 @@ document.addEventListener("visibilitychange", () => {
 });
 
 function switchTab(tab) {
-  ["list", "add", "settle", "members"].forEach((t) => {
+  ["list", "add", "settle", "members", "summary"].forEach((t) => {
     $("tab-" + t).classList.toggle("hidden", t !== tab);
   });
   [...document.querySelectorAll(".tabs button")].forEach((b) =>
-    b.classList.toggle("active", b.dataset.tab === tab)
+    b.classList.toggle("active", b.dataset.tab === (tab === "summary" ? "settle" : tab))
   );
   if (tab === "settle") renderSettle();
+  if (tab === "summary") renderSummary();
 }
 
 async function refresh() {
