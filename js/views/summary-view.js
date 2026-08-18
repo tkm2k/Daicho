@@ -83,16 +83,9 @@ export function render() {
       if (hasCategory.tatekae) {
         rows += `
         <div class="summary-row">
-          <span>📘 立替での負担</span>
+          <span>📘 自分の支出</span>
           <span>${yen(m.tatekaeExpense)}</span>
         </div>`;
-        if (m.tatekaePaid > 0) {
-          rows += `
-          <div class="summary-row sub">
-            <span>↳ うち立替払い</span>
-            <span>${yen(m.tatekaePaid)}</span>
-          </div>`;
-        }
       }
 
       if (hasCategory.loan) {
@@ -117,12 +110,17 @@ export function render() {
         ${rows}
         <div class="summary-divider"></div>
         <div class="summary-row total">
-          <span>💰 総合収支</span>
+          <span>💰 最終収支</span>
           <span>
             ${balanceHtml(m.totalBalance)}
             <span class="summary-total-label">${totalLabel(m.totalBalance)}</span>
           </span>
         </div>
+        ${hasCategory.tatekae && m.tatekaePaid > 0 ? `
+        <div class="summary-row sub">
+          <span>↳ 立替払い額</span>
+          <span>${yen(m.tatekaePaid)}</span>
+        </div>` : ""}
       </div>`;
     })
     .join("");
