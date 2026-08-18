@@ -79,14 +79,25 @@
       </div>
 
       <div id="form-tatekae">
+        <div class="seg seg-small" id="tatekae-mode-seg">
+          <button data-mode="simple" class="active">かんたん入力</button>
+          <button data-mode="custom">こだわり入力</button>
+        </div>
         <label>内容</label>
         <input type="text" id="t-title" placeholder="例：レンタカー代、夕食代">
         <label>支払った人</label>
         <select id="t-payer"></select>
-        <label>金額（円）</label>
-        <input type="text" id="t-amount" placeholder="10000" inputmode="numeric">
-        <label>割り勘の対象者</label>
-        <div class="member-check" id="t-targets"></div>
+        <div id="tatekae-simple">
+          <label>金額（円）</label>
+          <input type="text" id="t-amount" placeholder="10000" inputmode="numeric">
+          <label>割り勘の対象者</label>
+          <div class="member-check" id="t-targets"></div>
+        </div>
+        <div id="tatekae-custom" class="hidden">
+          <label>メンバーごとの負担額</label>
+          <div id="t-custom-rows"></div>
+          <div class="custom-total" id="t-custom-total">合計：¥0</div>
+        </div>
       </div>
 
       <div id="form-loan" class="hidden">

@@ -4,9 +4,19 @@ import { store } from "../db/index.js";
 import { splitTatekae } from "../logic/settlement.js";
 
 let app;
+let tatekaeMode = "simple";
 
 export function setup(appRef) {
   app = appRef;
+
+  $("tatekae-mode-seg").addEventListener("click", (e) => {
+    const b = e.target.closest("button");
+    if (!b) return;
+    tatekaeMode = b.dataset.mode;
+    [...$("tatekae-mode-seg").children].forEach((c) => c.classList.toggle("active", c === b));
+    $("tatekae-simple").classList.toggle("hidden", tatekaeMode !== "simple");
+    $("tatekae-custom").classList.toggle("hidden", tatekaeMode !== "custom");
+  });
 
   $("cat-seg").addEventListener("click", (e) => {
     const b = e.target.closest("button");
@@ -27,6 +37,23 @@ export function setup(appRef) {
 
   setupAmountInput($("t-amount"));
   setupAmountInput($("l-amount"));
+}
+
+function updateCustomTotal() {
+  const total = [...document.querySelectorAll(".custom-input")]
+    .reduce((s, i) => s + (parseInt(normalizeNumStr(i.value)) || 0), 0);
+  $("t-custom-total").textContent = "合計：¥" + total.toLocaleString();
+}
+
+function customLines() {
+  const entries = [...document.querySelectorAll(".custom-input")]
+    .map((i) => ({ member_id: i.dataset.mid, amount: parseInt(normalizeNumStr(i.value)) || 0 }))
+    .filter((e) => e.amount > 0);
+  const total = entries.reduce((s, e) => s + e.amount, 0);
+  const payer = $("t-payer").value;
+  const lines = entries.map((e) => ({ member_id: e.member_id, delta: -e.amount }));
+  lines.push({ member_id: payer, delta: total });
+  return { lines, total };
 }
 
 function gambleLines() {
@@ -59,6 +86,23 @@ export function render() {
   $("t-targets").innerHTML = state.members
     .map((m) => `<label><input type="checkbox" value="${m.id}" checked>${esc(m.name)}</label>`)
     .join("");
+
+  $("t-custom-rows").innerHTML = state.members
+    .map(
+      (m) => `
+    <div class="custom-row">
+      <div class="custom-name">${esc(m.name)}</div>
+      <input type="text" data-mid="${m.id}" placeholder="0" inputmode="numeric" class="custom-input">
+    </div>`
+    )
+    .join("");
+
+  [...document.querySelectorAll(".custom-input")].forEach((i) => {
+    setupAmountInput(i);
+    i.addEventListener("input", updateCustomTotal);
+    i.addEventListener("blur", updateCustomTotal);
+  });
+  updateCustomTotal();
 
   $("g-rows").innerHTML = state.members
     .map(
@@ -114,11 +158,33 @@ export function editTx(id) {
   if (tx.category === "tatekae") {
     $("t-title").value = tx.title || "";
     if (tx.payer_id) $("t-payer").value = tx.payer_id;
-    $("t-amount").value = tx.amount.toLocaleString();
-    const targets = new Set(tx.lines.filter((l) => l.delta < 0).map((l) => l.member_id));
-    [...$("t-targets").querySelectorAll("input")].forEach(
-      (i) => (i.checked = targets.has(i.value))
+
+    const negatives = tx.lines.filter((l) => l.delta < 0);
+    const amounts = negatives.map((l) => Math.abs(l.delta));
+    const isEqualSplit = amounts.length > 0 && amounts.every((a) => Math.abs(a - amounts[0]) <= 1);
+
+    if (isEqualSplit) {
+      tatekaeMode = "simple";
+      $("t-amount").value = tx.amount.toLocaleString();
+      const targets = new Set(negatives.map((l) => l.member_id));
+      [...$("t-targets").querySelectorAll("input")].forEach(
+        (i) => (i.checked = targets.has(i.value))
+      );
+    } else {
+      tatekaeMode = "custom";
+      const deltaMap = {};
+      negatives.forEach((l) => (deltaMap[l.member_id] = Math.abs(l.delta)));
+      [...document.querySelectorAll(".custom-input")].forEach((i) => {
+        const v = deltaMap[i.dataset.mid];
+        i.value = v ? v.toLocaleString() : "";
+      });
+      updateCustomTotal();
+    }
+    [...$("tatekae-mode-seg").children].forEach((c) =>
+      c.classList.toggle("active", c.dataset.mode === tatekaeMode)
     );
+    $("tatekae-simple").classList.toggle("hidden", tatekaeMode !== "simple");
+    $("tatekae-custom").classList.toggle("hidden", tatekaeMode !== "custom");
   } else if (tx.category === "loan") {
     $("l-title").value = tx.title || "";
     const from = tx.lines.find((l) => l.delta > 0);
@@ -158,6 +224,12 @@ export function exitEditMode() {
     c.disabled = false;
     c.style.opacity = "1";
   });
+  tatekaeMode = "simple";
+  [...$("tatekae-mode-seg").children].forEach((c) =>
+    c.classList.toggle("active", c.dataset.mode === "simple")
+  );
+  $("tatekae-simple").classList.remove("hidden");
+  $("tatekae-custom").classList.add("hidden");
   $("btn-save-tx").textContent = "記録する";
   $("edit-created-at").textContent = "";
   $("edit-created-at").classList.add("hidden");
@@ -172,18 +244,31 @@ async function handleSave() {
     if (state.currentCat === "tatekae") {
       const title = $("t-title").value.trim();
       const payer = $("t-payer").value;
-      const amount = parseInt(normalizeNumStr($("t-amount").value));
-      const targets = [...$("t-targets").querySelectorAll("input:checked")].map((i) => i.value);
       if (!title) return toast("内容を入力してください");
-      if (!amount || amount <= 0) return toast("金額を入力してください");
-      if (targets.length === 0) return toast("対象者を選んでください");
-      tx = {
-        category: "tatekae",
-        title,
-        payer_id: payer,
-        amount,
-        lines: splitTatekae(amount, payer, targets),
-      };
+
+      if (tatekaeMode === "simple") {
+        const amount = parseInt(normalizeNumStr($("t-amount").value));
+        const targets = [...$("t-targets").querySelectorAll("input:checked")].map((i) => i.value);
+        if (!amount || amount <= 0) return toast("金額を入力してください");
+        if (targets.length === 0) return toast("対象者を選んでください");
+        tx = {
+          category: "tatekae",
+          title,
+          payer_id: payer,
+          amount,
+          lines: splitTatekae(amount, payer, targets),
+        };
+      } else {
+        const { lines, total } = customLines();
+        if (total <= 0) return toast("負担額を入力してください");
+        tx = {
+          category: "tatekae",
+          title,
+          payer_id: payer,
+          amount: total,
+          lines,
+        };
+      }
     } else if (state.currentCat === "loan") {
       const title = $("l-title").value.trim() || "貸し借り";
       const from = $("l-from").value;

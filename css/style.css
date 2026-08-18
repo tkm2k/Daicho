@@ -220,6 +220,20 @@ button {
 }
 .member-check input { width: 16px; height: 16px; }
 
+.seg-small { margin-bottom: 10px; }
+.seg-small button { font-size: 12.5px; padding: 7px 4px; }
+
+.custom-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.custom-name {
+  flex: 0 0 70px;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.custom-row input { flex: 1; min-width: 0; }
+.custom-total { font-size: 14px; font-weight: 700; margin-top: 4px; color: var(--text); }
+
 .gamble-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
 .gamble-row .gname {
   flex: 0 0 70px;
