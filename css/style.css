@@ -501,6 +501,48 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
   margin: 6px 0;
 }
 
+.summary-calc-group {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 4px 12px;
+  margin-bottom: 6px;
+}
+
+.balance-detail .summary-calc-group {
+  background: #fff;
+}
+
+.summary-calc-line {
+  border-top: 1px dashed var(--border);
+  margin: 4px 0;
+}
+
+.summary-row.subtotal {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.summary-row.summary-addition {
+  padding: 4px 0;
+  font-size: 14px;
+}
+
+.summary-op {
+  color: var(--sub);
+  font-weight: 700;
+}
+
+.summary-final-line {
+  border-top: 2px solid var(--sub);
+  margin: 6px 0;
+}
+
+.summary-row.summary-final {
+  font-weight: 800;
+  font-size: 16px;
+  padding: 4px 0;
+}
+
 .summary-total-label {
   font-size: 12px;
   font-weight: 400;

@@ -59,22 +59,27 @@ export function render() {
         </div>`;
       }
 
+      const calcSection = m.tatekaePaid > 0
+        ? `<div class="summary-calc-group">
+            ${rows}
+            <div class="summary-calc-line"></div>
+            <div class="summary-row subtotal">
+              <span>小計（実質負担額）</span>
+              ${balanceHtml(m.subtotal)}
+            </div>
+          </div>
+          <div class="summary-row summary-addition">
+            <span><span class="summary-op">＋</span> 📘 立替支払額</span>
+            ${balanceHtml(m.tatekaePaid)}
+          </div>`
+        : rows;
+
       return `
       <div class="summary-member">
         <div class="summary-member-name">${esc(m.name)}</div>
-        ${rows}
-        <div class="summary-divider"></div>
-        <div class="summary-row total">
-          <span>小計（実質負担額）</span>
-          ${balanceHtml(m.subtotal)}
-        </div>
-        ${m.tatekaePaid > 0 ? `
-        <div class="summary-row">
-          <span>📘 立替支払額</span>
-          ${balanceHtml(m.tatekaePaid)}
-        </div>` : ""}
-        <div class="summary-divider"></div>
-        <div class="summary-row total">
+        ${calcSection}
+        <div class="summary-final-line"></div>
+        <div class="summary-row summary-final">
           <span>💰 最終収支</span>
           <span>
             ${balanceHtml(m.totalBalance)}

@@ -69,17 +69,20 @@ function detailHtml(m, hasCategory) {
     rows += `<div class="summary-row"><span>🎲 勝ち負け</span>${balHtml(m.gambleBalance)}</div>`;
   }
 
-  rows += `<div class="summary-divider"></div>`;
-  rows += `<div class="summary-row total"><span>小計（実質負担額）</span>${balHtml(m.subtotal)}</div>`;
-
+  let html = "";
   if (m.tatekaePaid > 0) {
-    rows += `<div class="summary-row"><span>📘 立替支払額</span>${balHtml(m.tatekaePaid)}</div>`;
+    html += `<div class="summary-calc-group">${rows}`;
+    html += `<div class="summary-calc-line"></div>`;
+    html += `<div class="summary-row subtotal"><span>小計（実質負担額）</span>${balHtml(m.subtotal)}</div></div>`;
+    html += `<div class="summary-row summary-addition"><span><span class="summary-op">＋</span> 📘 立替支払額</span>${balHtml(m.tatekaePaid)}</div>`;
+  } else {
+    html += rows;
   }
 
-  rows += `<div class="summary-divider"></div>`;
-  rows += `<div class="summary-row total"><span>💰 最終収支</span>${balHtml(m.totalBalance)}</div>`;
+  html += `<div class="summary-final-line"></div>`;
+  html += `<div class="summary-row summary-final"><span>💰 最終収支</span>${balHtml(m.totalBalance)}</div>`;
 
-  return rows;
+  return html;
 }
 
 export function render() {
