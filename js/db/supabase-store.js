@@ -19,6 +19,14 @@ export function createSupabaseStore(sb) {
       }
     },
 
+    async renameEvent(eid, name) {
+      const { error } = await sb.rpc("rename_event", {
+        p_event_id: eid,
+        p_name: name,
+      });
+      if (error) throw error;
+    },
+
     async listMembers(eid) {
       const { data, error } = await sb.rpc("list_members", { p_event_id: eid });
       if (error) throw error;

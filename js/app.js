@@ -2,6 +2,7 @@ import { $, toast } from "./utils.js";
 import { state } from "./state.js";
 import { store } from "./db/index.js";
 import { addToHistory } from "./logic/history.js";
+import { showRenameModal } from "./views/rename-modal.js";
 
 import { setup as setupHome, show as showHome } from "./views/home.js";
 import { setup as setupTxList, render as renderTxList } from "./views/tx-list.js";
@@ -37,6 +38,24 @@ document.querySelector(".tabs").addEventListener("click", (e) => {
 });
 
 $("btn-open-summary").onclick = () => switchTab("summary");
+
+$("header-event").onclick = async () => {
+  if (!state.eventId) return;
+  const name = await showRenameModal($("header-event").textContent, "イベント名を変更");
+  if (name === null) return;
+  const trimmed = name.trim();
+  if (!trimmed) return toast("イベント名を入力してください");
+  if (trimmed === $("header-event").textContent) return;
+  try {
+    await store.renameEvent(state.eventId, trimmed);
+    $("header-event").textContent = trimmed;
+    addToHistory(state.eventId, trimmed);
+    toast("イベント名を変更しました");
+  } catch (err) {
+    console.error(err);
+    toast("変更に失敗しました: " + err.message);
+  }
+};
 
 $("btn-copy").onclick = async () => {
   try {
@@ -92,7 +111,7 @@ async function init() {
     }
     addToHistory(state.eventId, ev.name);
     $("header-event").textContent = ev.name;
-    $("header-event").style.display = "block";
+    $("header-event").classList.remove("hidden");
     $("view-event").classList.remove("hidden");
     $("share-url").value = location.href;
     await refresh();

@@ -30,6 +30,14 @@ export const LocalStore = {
     return db[id] ? db[id].event : null;
   },
 
+  async renameEvent(eid, name) {
+    const db = load();
+    if (db[eid]) {
+      db[eid].event.name = name.trim();
+      save(db);
+    }
+  },
+
   async listMembers(eid) {
     const db = load();
     return db[eid] ? db[eid].members : [];

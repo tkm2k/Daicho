@@ -45,7 +45,20 @@ header {
   z-index: 10;
 }
 header h1 { font-size: 17px; font-weight: 700; }
-header .event-name { font-size: 13px; opacity: .9; margin-top: 2px; }
+header .event-name {
+  font-size: 13px;
+  opacity: .9;
+  margin-top: 2px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+header .event-name::after {
+  content: "✏️";
+  font-size: 11px;
+  opacity: .7;
+}
 
 .card {
   background: var(--card);
