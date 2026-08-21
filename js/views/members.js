@@ -48,7 +48,7 @@ export function render() {
     .map(
       (m) =>
         `<div class="member-list-item"><span>${esc(m.name)}</span>
-      <button class="btn-small" data-action="edit-member" data-id="${m.id}">✏️ 編集</button></div>`
+      <button class="btn-small" data-action="edit-member" data-id="${m.id}"><svg class="ic-edit" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg> 編集</button></div>`
     )
     .join("");
 }

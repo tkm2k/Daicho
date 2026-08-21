@@ -65,7 +65,7 @@ export function render() {
       <div>
         <div class="tx-amount">${yen(tx.amount)}</div>
         <div style="text-align:right;margin-top:6px">
-          <button class="btn-small" data-action="edit-tx" data-id="${tx.id}">✏️ 編集</button>
+          <button class="btn-small" data-action="edit-tx" data-id="${tx.id}"><svg class="ic-edit" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg> 編集</button>
         </div>
       </div>
     </div>`
