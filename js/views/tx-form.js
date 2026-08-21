@@ -112,7 +112,7 @@ export function render() {
     <div class="custom-row">
       <div class="custom-name">${esc(m.name)}</div>
       <input type="text" data-mid="${m.id}" placeholder="0" inputmode="numeric" class="custom-input">
-      <button type="button" class="btn-calc-sm" data-action="calc">🧮</button>
+      <button type="button" class="btn-calc-sm" data-action="calc"><svg class="ic-calc" viewBox="0 0 24 24"><rect x="3" y="2" width="18" height="20" rx="3"/><rect x="6" y="5" width="12" height="4" rx="1" fill="#fff"/><circle cx="7.5" cy="13" r="1.2" fill="#fff"/><circle cx="12" cy="13" r="1.2" fill="#fff"/><circle cx="16.5" cy="13" r="1.2" fill="#fff"/><circle cx="7.5" cy="17.5" r="1.2" fill="#fff"/><circle cx="12" cy="17.5" r="1.2" fill="#fff"/><circle cx="16.5" cy="17.5" r="1.2" fill="#fff"/></svg></button>
     </div>`
     )
     .join("");
@@ -138,7 +138,7 @@ export function render() {
         <button type="button" data-s="-1">−</button>
       </div>
       <input type="text" data-mid="${m.id}" placeholder="0" inputmode="numeric" class="g-input">
-      <button type="button" class="btn-calc-sm" data-action="calc">🧮</button>
+      <button type="button" class="btn-calc-sm" data-action="calc"><svg class="ic-calc" viewBox="0 0 24 24"><rect x="3" y="2" width="18" height="20" rx="3"/><rect x="6" y="5" width="12" height="4" rx="1" fill="#fff"/><circle cx="7.5" cy="13" r="1.2" fill="#fff"/><circle cx="12" cy="13" r="1.2" fill="#fff"/><circle cx="16.5" cy="13" r="1.2" fill="#fff"/><circle cx="7.5" cy="17.5" r="1.2" fill="#fff"/><circle cx="12" cy="17.5" r="1.2" fill="#fff"/><circle cx="16.5" cy="17.5" r="1.2" fill="#fff"/></svg></button>
     </div>`
     )
     .join("");

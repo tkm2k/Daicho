@@ -594,14 +594,21 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
   flex: 0 0 44px;
   width: 44px;
   height: 44px;
-  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+.btn-calc .ic-calc { width: 22px; height: 22px; }
 .btn-calc-sm {
   flex: 0 0 34px;
   width: 34px;
   height: 38px;
-  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+.btn-calc-sm .ic-calc { width: 18px; height: 18px; }
+.ic-calc { fill: var(--primary); }
 .btn-calc:active, .btn-calc-sm:active { background: #dbeafe; }
 
 /* 電卓モーダル（ボトムシート） */
