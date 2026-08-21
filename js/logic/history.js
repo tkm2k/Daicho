@@ -1,4 +1,4 @@
-const HISTORY_KEY = "walica_recent_events";
+const HISTORY_KEY = "daicho_recent_events";
 const HISTORY_MAX = 10;
 
 export function loadHistory() {
