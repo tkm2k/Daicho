@@ -89,7 +89,10 @@
         <select id="t-payer"></select>
         <div id="tatekae-simple">
           <label>金額（円）</label>
-          <input type="text" id="t-amount" placeholder="10000" inputmode="numeric">
+          <div class="amount-wrap">
+            <input type="text" id="t-amount" placeholder="10000" inputmode="numeric">
+            <button type="button" class="btn-calc" data-action="calc">🧮</button>
+          </div>
           <label>割り勘の対象者</label>
           <div class="member-check" id="t-targets"></div>
         </div>
@@ -108,7 +111,10 @@
         <label>借りた人（払う側）</label>
         <select id="l-to"></select>
         <label>金額（円）</label>
-        <input type="text" id="l-amount" placeholder="5000" inputmode="numeric">
+        <div class="amount-wrap">
+          <input type="text" id="l-amount" placeholder="5000" inputmode="numeric">
+          <button type="button" class="btn-calc" data-action="calc">🧮</button>
+        </div>
       </div>
 
       <div id="form-gamble" class="hidden">
@@ -180,6 +186,36 @@
     <button data-tab="add"><span class="ic">➕</span>追加</button>
     <button data-tab="settle"><span class="ic">💰</span>精算</button>
     <button data-tab="members"><span class="ic">👥</span>メンバー</button>
+  </div>
+</div>
+
+<!-- 電卓モーダル -->
+<div class="calc-overlay hidden" id="modal-calc">
+  <div class="calc-sheet">
+    <div class="calc-display">
+      <div class="calc-expr" id="calc-expr">0</div>
+      <div class="calc-result" id="calc-result"></div>
+    </div>
+    <div class="calc-grid" id="calc-grid">
+      <button type="button" data-v="7">7</button>
+      <button type="button" data-v="8">8</button>
+      <button type="button" data-v="9">9</button>
+      <button type="button" data-op="/" class="calc-op">÷</button>
+      <button type="button" data-v="4">4</button>
+      <button type="button" data-v="5">5</button>
+      <button type="button" data-v="6">6</button>
+      <button type="button" data-op="*" class="calc-op">×</button>
+      <button type="button" data-v="1">1</button>
+      <button type="button" data-v="2">2</button>
+      <button type="button" data-v="3">3</button>
+      <button type="button" data-op="-" class="calc-op">−</button>
+      <button type="button" data-act="clear" class="calc-fn">C</button>
+      <button type="button" data-v="0">0</button>
+      <button type="button" data-act="back" class="calc-fn">⌫</button>
+      <button type="button" data-op="+" class="calc-op">＋</button>
+    </div>
+    <button type="button" class="calc-done" id="calc-done">完了</button>
+    <button type="button" class="calc-cancel" id="calc-cancel">キャンセル</button>
   </div>
 </div>
 

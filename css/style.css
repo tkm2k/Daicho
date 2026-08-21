@@ -575,3 +575,107 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
   font-size: 17px;
   color: var(--text);
 }
+
+/* 電卓ボタン */
+.amount-wrap { display: flex; gap: 8px; align-items: center; }
+.amount-wrap input { flex: 1; min-width: 0; }
+
+.btn-calc {
+  flex: 0 0 44px;
+  height: 44px;
+  background: #eef2ff;
+  color: var(--primary);
+  border-radius: 8px;
+  font-size: 20px;
+}
+.btn-calc:active { background: #dbeafe; }
+
+.btn-calc-sm {
+  flex: 0 0 34px;
+  height: 38px;
+  background: #eef2ff;
+  color: var(--primary);
+  border-radius: 8px;
+  font-size: 16px;
+}
+.btn-calc-sm:active { background: #dbeafe; }
+
+/* 電卓モーダル（ボトムシート） */
+.calc-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.4);
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.calc-overlay.hidden { display: none !important; }
+
+.calc-sheet {
+  background: var(--card);
+  border-radius: 16px 16px 0 0;
+  padding: 16px 16px calc(16px + env(safe-area-inset-bottom));
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 -4px 20px rgba(0,0,0,.15);
+}
+
+.calc-display {
+  text-align: right;
+  padding: 8px 4px 12px;
+  min-height: 56px;
+}
+.calc-expr {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  word-break: break-all;
+  line-height: 1.3;
+}
+.calc-result {
+  font-size: 14px;
+  color: var(--sub);
+  margin-top: 2px;
+}
+
+.calc-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.calc-grid button {
+  padding: 16px 0;
+  font-size: 20px;
+  border-radius: 10px;
+  background: #f1f5f9;
+  font-weight: 600;
+}
+.calc-grid button:active { background: #e2e8f0; }
+
+.calc-op { background: #eef2ff !important; color: var(--primary) !important; }
+.calc-op:active { background: #dbeafe !important; }
+.calc-fn { color: var(--sub) !important; }
+
+.calc-done {
+  width: 100%;
+  padding: 14px;
+  background: var(--primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+}
+.calc-done:active { background: var(--primary-dark); }
+
+.calc-cancel {
+  width: 100%;
+  padding: 11px;
+  background: #f1f5f9;
+  color: var(--sub);
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 10px;
+}

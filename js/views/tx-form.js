@@ -2,6 +2,7 @@ import { $, esc, toast, normalizeNumStr, setupAmountInput, fmtCreatedAt } from "
 import { state, memberName } from "../state.js";
 import { store } from "../db/index.js";
 import { splitTatekae } from "../logic/settlement.js";
+import { openCalc } from "./calc-modal.js";
 
 let app;
 let tatekaeMode = "simple";
@@ -37,6 +38,22 @@ export function setup(appRef) {
 
   setupAmountInput($("t-amount"));
   setupAmountInput($("l-amount"));
+
+  $("tab-add").addEventListener("click", async (e) => {
+    const btn = e.target.closest("[data-action='calc']");
+    if (!btn) return;
+    const row = btn.closest(".amount-wrap, .custom-row, .gamble-row");
+    if (!row) return;
+    const input = row.querySelector("input[type='text']");
+    if (!input) return;
+    document.activeElement?.blur();
+    const cur = parseInt(normalizeNumStr(input.value)) || 0;
+    const result = await openCalc(cur);
+    if (result === null) return;
+    input.value = String(result);
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    input.dispatchEvent(new Event("blur", { bubbles: true }));
+  });
 }
 
 function updateCustomTotal() {
@@ -93,6 +110,7 @@ export function render() {
     <div class="custom-row">
       <div class="custom-name">${esc(m.name)}</div>
       <input type="text" data-mid="${m.id}" placeholder="0" inputmode="numeric" class="custom-input">
+      <button type="button" class="btn-calc-sm" data-action="calc">🧮</button>
     </div>`
     )
     .join("");
@@ -114,6 +132,7 @@ export function render() {
         <button type="button" data-s="-1">−</button>
       </div>
       <input type="text" data-mid="${m.id}" placeholder="0" inputmode="numeric" class="g-input">
+      <button type="button" class="btn-calc-sm" data-action="calc">🧮</button>
     </div>`
     )
     .join("");
