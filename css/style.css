@@ -580,25 +580,29 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
 .amount-wrap { display: flex; gap: 8px; align-items: center; }
 .amount-wrap input { flex: 1; min-width: 0; }
 
+.btn-calc, .btn-calc-sm {
+  background: #eef2ff;
+  color: var(--primary);
+  border-radius: 8px;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  position: relative;
+  z-index: 1;
+}
 .btn-calc {
   flex: 0 0 44px;
+  width: 44px;
   height: 44px;
-  background: #eef2ff;
-  color: var(--primary);
-  border-radius: 8px;
   font-size: 20px;
 }
-.btn-calc:active { background: #dbeafe; }
-
 .btn-calc-sm {
   flex: 0 0 34px;
+  width: 34px;
   height: 38px;
-  background: #eef2ff;
-  color: var(--primary);
-  border-radius: 8px;
   font-size: 16px;
 }
-.btn-calc-sm:active { background: #dbeafe; }
+.btn-calc:active, .btn-calc-sm:active { background: #dbeafe; }
 
 /* 電卓モーダル（ボトムシート） */
 .calc-overlay {
@@ -651,6 +655,9 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
   border-radius: 10px;
   background: #f1f5f9;
   font-weight: 600;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
 }
 .calc-grid button:active { background: #e2e8f0; }
 

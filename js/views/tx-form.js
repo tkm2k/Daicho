@@ -39,13 +39,15 @@ export function setup(appRef) {
   setupAmountInput($("t-amount"));
   setupAmountInput($("l-amount"));
 
-  $("tab-add").addEventListener("click", async (e) => {
-    const btn = e.target.closest("[data-action='calc']");
-    if (!btn) return;
-    const row = btn.closest(".amount-wrap, .custom-row, .gamble-row");
-    if (!row) return;
-    const input = row.querySelector("input[type='text']");
-    if (!input) return;
+  attachCalc($("t-amount").parentElement.querySelector(".btn-calc"), $("t-amount"));
+  attachCalc($("l-amount").parentElement.querySelector(".btn-calc"), $("l-amount"));
+}
+
+function attachCalc(btn, input) {
+  if (!btn || !input) return;
+  btn.onclick = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     document.activeElement?.blur();
     const cur = parseInt(normalizeNumStr(input.value)) || 0;
     const result = await openCalc(cur);
@@ -53,7 +55,7 @@ export function setup(appRef) {
     input.value = String(result);
     input.dispatchEvent(new Event("input", { bubbles: true }));
     input.dispatchEvent(new Event("blur", { bubbles: true }));
-  });
+  };
 }
 
 function updateCustomTotal() {
@@ -120,6 +122,10 @@ export function render() {
     i.addEventListener("input", updateCustomTotal);
     i.addEventListener("blur", updateCustomTotal);
   });
+  [...document.querySelectorAll(".custom-row .btn-calc-sm")].forEach((btn) => {
+    const input = btn.closest(".custom-row").querySelector(".custom-input");
+    attachCalc(btn, input);
+  });
   updateCustomTotal();
 
   $("g-rows").innerHTML = state.members
@@ -154,6 +160,10 @@ export function render() {
         updateGambleSum();
       })
   );
+  [...document.querySelectorAll(".gamble-row .btn-calc-sm")].forEach((btn) => {
+    const input = btn.closest(".gamble-row").querySelector(".g-input");
+    attachCalc(btn, input);
+  });
 
   updateGambleSum();
 }
