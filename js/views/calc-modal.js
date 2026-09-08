@@ -14,7 +14,7 @@ function evaluate() {
   const ops = [];
   for (const t of all) {
     if ("+-*/".includes(t)) ops.push(t);
-    else nums.push(parseInt(t) || 0);
+    else nums.push(Number(t) || 0);
   }
 
   for (let i = 0; i < ops.length; ) {
@@ -24,7 +24,7 @@ function evaluate() {
           ? 0
           : ops[i] === "*"
             ? nums[i] * nums[i + 1]
-            : Math.floor(nums[i] / nums[i + 1]);
+            : nums[i] / nums[i + 1];
       nums.splice(i, 2, r);
       ops.splice(i, 1);
     } else i++;
@@ -56,7 +56,8 @@ function formatExpr() {
 
 function update() {
   $("calc-expr").textContent = formatExpr();
-  const result = evaluate();
+  const raw = evaluate();
+  const result = Math.floor(raw);
   const hasOp = tokens.length > 1;
   $("calc-result").textContent = hasOp ? "= " + result.toLocaleString() : "";
   $("calc-done").textContent = result ? "完了（" + result.toLocaleString() + "円）" : "完了";
@@ -114,7 +115,7 @@ export function openCalc(initialValue) {
     }
 
     grid.addEventListener("click", onGrid);
-    $("calc-done").onclick = () => { cleanup(); resolve(evaluate()); };
+    $("calc-done").onclick = () => { cleanup(); resolve(Math.floor(evaluate())); };
     $("calc-cancel").onclick = () => { cleanup(); resolve(null); };
     overlay.addEventListener("click", onBg);
   });
