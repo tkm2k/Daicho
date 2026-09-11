@@ -97,14 +97,30 @@ export function render() {
   const opts = state.members
     .map((m) => `<option value="${m.id}">${esc(m.name)}</option>`)
     .join("");
+  const prevPayer = $("t-payer").value;
+  const prevFrom = $("l-from").value;
+  const prevTo = $("l-to").value;
   $("t-payer").innerHTML = opts;
   $("l-from").innerHTML = opts;
   $("l-to").innerHTML = opts;
-  if (state.members.length > 1) $("l-to").selectedIndex = 1;
+  if (prevPayer) $("t-payer").value = prevPayer;
+  if (prevFrom) $("l-from").value = prevFrom;
+  if (prevTo) $("l-to").value = prevTo;
+  else if (state.members.length > 1) $("l-to").selectedIndex = 1;
 
+  const prevTargets = new Map(
+    [...$("t-targets").querySelectorAll("input")].map((i) => [i.value, i.checked])
+  );
   $("t-targets").innerHTML = state.members
     .map((m) => `<label><input type="checkbox" value="${m.id}" checked>${esc(m.name)}</label>`)
     .join("");
+  [...$("t-targets").querySelectorAll("input")].forEach((i) => {
+    if (prevTargets.has(i.value)) i.checked = prevTargets.get(i.value);
+  });
+
+  const prevCustom = new Map(
+    [...document.querySelectorAll(".custom-input")].map((i) => [i.dataset.mid, i.value])
+  );
 
   $("t-custom-rows").innerHTML = state.members
     .map(
@@ -118,6 +134,7 @@ export function render() {
     .join("");
 
   [...document.querySelectorAll(".custom-input")].forEach((i) => {
+    i.value = prevCustom.get(i.dataset.mid) || "";
     setupAmountInput(i);
     i.addEventListener("input", updateCustomTotal);
     i.addEventListener("blur", updateCustomTotal);
@@ -128,6 +145,12 @@ export function render() {
   });
   updateCustomTotal();
 
+  const prevGamble = new Map(
+    [...document.querySelectorAll(".gamble-row")].map((row) => {
+      const i = row.querySelector(".g-input");
+      return [i.dataset.mid, { v: i.value, s: row.querySelector(".sign-toggle .active")?.dataset.s }];
+    })
+  );
   $("g-rows").innerHTML = state.members
     .map(
       (m) => `
@@ -142,6 +165,17 @@ export function render() {
     </div>`
     )
     .join("");
+
+  [...document.querySelectorAll(".gamble-row")].forEach((row) => {
+    const i = row.querySelector(".g-input");
+    const prev = prevGamble.get(i.dataset.mid);
+    if (!prev) return;
+    i.value = prev.v;
+    if (prev.s === "-1")
+      [...row.querySelectorAll(".sign-toggle button")].forEach((b) =>
+        b.classList.toggle("active", b.dataset.s === "-1")
+      );
+  });
 
   [...document.querySelectorAll(".g-input")].forEach(
     (i) =>
@@ -264,6 +298,17 @@ export function exitEditMode() {
   $("edit-created-at").classList.add("hidden");
   $("edit-actions").classList.add("hidden");
   ["t-title", "t-amount", "l-title", "l-amount", "g-title"].forEach((id) => ($(id).value = ""));
+  $("t-payer").selectedIndex = 0;
+  $("l-from").selectedIndex = 0;
+  $("l-to").selectedIndex = state.members.length > 1 ? 1 : 0;
+  [...$("t-targets").querySelectorAll("input")].forEach((i) => (i.checked = true));
+  [...document.querySelectorAll(".custom-input")].forEach((i) => (i.value = ""));
+  [...document.querySelectorAll(".gamble-row")].forEach((row) => {
+    row.querySelector(".g-input").value = "";
+    [...row.querySelectorAll(".sign-toggle button")].forEach((b) =>
+      b.classList.toggle("active", b.dataset.s === "1")
+    );
+  });
   render();
 }
 
